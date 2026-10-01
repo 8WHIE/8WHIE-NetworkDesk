@@ -1,0 +1,6 @@
+{
+  "name": "8WHIE Network Toolkit (8NWT)",
+  "description": "Modern Network Diagnostics & Administration Toolkit created by 8WHIE (Aryan Thakur). Free, open-source, privacy-conscious network troubleshooting suite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

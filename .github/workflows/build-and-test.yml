@@ -1,0 +1,45 @@
+name: Build & Test 8WHIE Network Toolkit
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build & Test (Windows)
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore dotnet/EightWhie.NetworkToolkit.sln
+
+    - name: Build Solution
+      run: dotnet build dotnet/EightWhie.NetworkToolkit.sln --configuration Release --no-restore
+
+    - name: Execute xUnit Tests
+      run: dotnet test dotnet/tests/EightWhie.NetworkToolkit.Tests/EightWhie.NetworkToolkit.Tests.csproj --configuration Release --no-build --verbosity normal
+
+    - name: Publish Self-Contained Executable
+      run: |
+        dotnet publish dotnet/src/EightWhie.NetworkToolkit/EightWhie.NetworkToolkit.csproj `
+          --configuration Release `
+          --runtime win-x64 `
+          --self-contained true `
+          -p:PublishSingleFile=true `
+          --output ./publish/win-x64
+
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: 8WHIE-NetworkToolkit-win-x64
+        path: ./publish/win-x64/
